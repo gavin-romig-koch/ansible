@@ -121,7 +121,10 @@ class CallbackModule(CallbackBase):
 
         result_was_changed = ('changed' in result._result and result._result['changed'])
         if result_was_changed:
-            msg = "done"
+            if self._options is not None and self._options.spec and result._result.get('check_mode', False):
+                msg = "divergent"
+            else:
+                msg = "done"
             display_color = C.COLOR_CHANGED
 
         task_result = self._process_result_output(result, msg)

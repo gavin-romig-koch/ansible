@@ -75,16 +75,20 @@ class CallbackModule(CallbackBase):
         if isinstance(result._task, TaskInclude):
             return
         elif result._result.get('changed', False):
-            if delegated_vars:
-                msg = "changed: [%s -> %s]" % (result._host.get_name(), delegated_vars['ansible_host'])
+            if self._options is not None and self._options.spec and result._result.get('check_mode', False):
+                msg_keyword = "divergent"
             else:
-                msg = "changed: [%s]" % result._host.get_name()
+                msg_keyword = "changed"
+            if delegated_vars:
+                msg = "%s: [%s -> %s]" % (msg_keyword, result._host.get_name(), delegated_vars['ansible_host'])
+            else:
+                msg = "%s: [%s]" % (msg_keyword, result._host.get_name())
             color = C.COLOR_CHANGED
         else:
             if delegated_vars:
-                msg = "ok: [%s -> %s]" % (result._host.get_name(), delegated_vars['ansible_host'])
+                msg = "%s: [%s -> %s]" % ("ok", result._host.get_name(), delegated_vars['ansible_host'])
             else:
-                msg = "ok: [%s]" % result._host.get_name()
+                msg = "%s: [%s]" % ("ok", result._host.get_name())
             color = C.COLOR_OK
 
         self._handle_warnings(result._result)
@@ -194,7 +198,10 @@ class CallbackModule(CallbackBase):
         if isinstance(result._task, TaskInclude):
             return
         elif result._result.get('changed', False):
-            msg = 'changed'
+            if self._options is not None and self._options.spec and result._result.get('check_mode', False):
+                msg = "divergent"
+            else:
+                msg = "changed"
             color = C.COLOR_CHANGED
         else:
             msg = 'ok'

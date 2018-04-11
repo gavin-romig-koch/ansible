@@ -265,7 +265,7 @@ class PlayContext(Base):
         self.become_method = options.become_method
         self.become_user = options.become_user
 
-        self.check_mode = boolean(options.check, strict=False)
+        self.check_mode = boolean(options.check, strict=False) or boolean(options.spec, strict=False) 
         self.diff = boolean(options.diff, strict=False)
 
         #  general flags (should we move out?)

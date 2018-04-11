@@ -545,6 +545,8 @@ class CLI(with_metaclass(ABCMeta, object)):
                               help="perform a syntax check on the playbook, but do not execute it")
             parser.add_option("-D", "--diff", default=C.DIFF_ALWAYS, dest='diff', action='store_true',
                               help="when changing (small) files and templates, show the differences in those files; works great with --check")
+            parser.add_option("--spec", default=False, dest='spec', action='store_true',
+                              help="don't make any changes; instead, find divergent configurations")
 
         if meta_opts:
             parser.add_option('--force-handlers', default=C.DEFAULT_FORCE_HANDLERS, dest='force_handlers', action='store_true',
